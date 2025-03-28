@@ -1,0 +1,29 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "the-sip-spot",
+          "appId": "1:993049949961:android:5ecb6f398681d855ca85d8",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "the-sip-spot",
+          "configurations": {
+            "android": "1:993049949961:android:5ecb6f398681d855ca85d8",
+            "ios": "1:993049949961:ios:c25228fa49c30576ca85d8",
+            "macos": "1:993049949961:ios:c25228fa49c30576ca85d8",
+            "web": "1:993049949961:web:e100482e73cb69e2ca85d8",
+            "windows": "1:993049949961:web:a55d6c81c3066337ca85d8"
+          }
+        }
+      }
+    }
+  },
+  "firestore": {
+    "rules": "firestore.indexes.json",
+    "indexes": "firestore.indexes.json"
+  }
+}
