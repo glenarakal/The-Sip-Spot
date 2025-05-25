@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sip_spot/FAQ.dart';
 import 'package:sip_spot/address.dart';
-import 'package:sip_spot/cart.dart';
+
 import 'package:sip_spot/fressery.dart';
 import 'package:sip_spot/map.dart';
 import 'package:sip_spot/notification.dart';

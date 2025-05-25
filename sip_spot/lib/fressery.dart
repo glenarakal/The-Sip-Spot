@@ -1,5 +1,4 @@
-import 'package:audioplayers/audioplayers.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -10,8 +9,24 @@ import 'package:sip_spot/cart.dart';
 import 'package:sip_spot/mixjuices.dart';
 import 'package:sip_spot/notification.dart';
 import 'package:sip_spot/plainjuices.dart';
-import 'package:sip_spot/subscription.dart';
 
+class Product {
+  final String name;
+  final String imageUrl;
+  final int price;
+  int quantity;
+  String selectedSize;
+
+  Product({
+    required this.name,
+    required this.imageUrl,
+    required this.price,
+    this.quantity = 1,
+    this.selectedSize = "200ml",
+  });
+
+  int get totalPrice => price * quantity;
+}
 class Fressery extends StatefulWidget {
   const Fressery({super.key});
 
@@ -20,15 +35,15 @@ class Fressery extends StatefulWidget {
 }
 
 class _FresseryState extends State<Fressery> {
-  int selectedtabindex = 0;
-  final List<String> tabtexts = [
-    "Home Screen",
-    "Favourites Screen",
-    "Profile Screen",
-  ];
+   List<Product> cart = [];
 
-  final List<IconData> tabicons = [Icons.home, Icons.favorite, Icons.person];
-  final List<String> tablabels = ["home", "favorites", "Profile"];
+  void removeFromCart(Product product) {
+    setState(() {
+      cart.remove(product);
+    });
+  }
+  int selectedtabindex = 0;
+
 
   List<dynamic> users = []; // List to hold fetched user data
   var getval = '';
@@ -105,10 +120,7 @@ class _FresseryState extends State<Fressery> {
           actions: [
             IconButton(
               onPressed: () {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(builder: (context) => Order()),
-                // );
+             
               },
               icon: Icon(Icons.calendar_today, color: Colors.black87),
             ),
@@ -121,15 +133,8 @@ class _FresseryState extends State<Fressery> {
               },
               icon: Icon(Icons.notifications, color: Colors.black87),
             ),
-            IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Cart()),
-                );
-              },
-              icon: Icon(Icons.shopping_bag_sharp),
-            ),
+          
+           
           ],
           bottom: TabBar(
             tabs: [Tab(text: "PLAINS"), Tab(text: "MIX"), Tab(text: "GREENS")],
@@ -138,6 +143,48 @@ class _FresseryState extends State<Fressery> {
         body: TabBarView(
           children: [Plainjuices(), Mixjuices(), Vegetablejuices()],
         ),
+      ),
+    );
+  }
+   Widget buildCartPage() {
+    return Container(
+      padding: EdgeInsets.all(16),
+      height: 400,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Cart",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 12),
+          Expanded(
+            child: cart.isEmpty
+                ? Center(child: Text("Cart is empty"))
+                : ListView.builder(
+                    itemCount: cart.length,
+                    itemBuilder: (context, index) {
+                      final item = cart[index];
+                      return ListTile(
+                        leading: Image.network(
+                          item.imageUrl,
+                          width: 50,
+                          height: 50,
+                          fit: BoxFit.cover,
+                        ),
+                        title: Text(item.name),
+                        subtitle: Text(
+                          "${item.selectedSize}, Qty: ${item.quantity}\nTotal: ₹${item.totalPrice}",
+                        ),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete),
+                          onPressed: () => removeFromCart(item),
+                        ),
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }

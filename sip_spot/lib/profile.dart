@@ -44,11 +44,11 @@ class _ProfileState extends State<Profile> {
            ),
       
           actions: [
-            IconButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart()));
-            },
-             icon: Icon(Icons.calendar_today,color: Colors.black87,),
-             ),
+            // IconButton(onPressed: (){
+            // Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart()));
+            // },
+            //  icon: Icon(Icons.calendar_today,color: Colors.black87,),
+            //  ),
              IconButton(onPressed: (){
               Navigator.push(context, MaterialPageRoute(builder: (context)=>Notification1()));
              },

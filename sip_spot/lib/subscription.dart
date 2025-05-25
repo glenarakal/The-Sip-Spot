@@ -108,10 +108,10 @@ List<Product> products =[
              },
                icon: Icon(Icons.notifications,color: Colors.black87,),
                ),
-               IconButton(onPressed: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart()));
-               } ,
-                icon: Icon(Icons.shopping_bag_sharp), )
+              //  IconButton(onPressed: (){
+              //   Navigator.push(context, MaterialPageRoute(builder: (context)=>Cart()));
+              //  } ,
+              //   icon: Icon(Icons.shopping_bag_sharp), )
           ],
          
           ),

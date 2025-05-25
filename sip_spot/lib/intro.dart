@@ -2,7 +2,8 @@ import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:sip_spot/registration.dart';
+
+import 'package:sip_spot/welcome_screen.dart';
 
 
 
@@ -52,7 +53,7 @@ class _IntroState extends State<Intro> {
              ),
          ]
        ),
-     nextScreen: Registration(),
+     nextScreen: WelcomeScreen(),
      duration: 1,
     splashTransition: SplashTransition.decoratedBoxTransition,
     backgroundColor: const Color.fromARGB(221, 144, 127, 153),);

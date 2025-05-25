@@ -1,6 +1,7 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'package:sip_spot/logon.dart';
@@ -14,253 +15,276 @@ class Registration extends StatefulWidget {
 
 class _RegistrationState extends State<Registration> {
   final formKey = GlobalKey<FormState>();
+
   final firstnameController = TextEditingController();
   final lastnamecontroller = TextEditingController();
   final emailController = TextEditingController();
   final mobileController = TextEditingController();
   final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
 
   int selectedindex = 0;
+  bool _obscureText = true;
 
-  final player = AudioPlayer();
-  
+  void _togglePassword() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: selectedindex,
-
-        selectedItemColor: const Color.fromARGB(255, 4, 62, 222),
-        unselectedItemColor: const Color.fromARGB(255, 10, 5, 5),
-        backgroundColor: const Color.fromARGB(255, 247, 248, 247),
-        type: BottomNavigationBarType.fixed,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-
-          BottomNavigationBarItem(icon: Icon(Icons.phone), label: "Phone"),
-        ],
-        onTap: (index) {
-          setState(() {
-            selectedindex = index;
-          });
-        },
-      ),
-
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(0, 186, 26, 26),
-        elevation: 0, // Remove shadow for a clean look
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center, // Center everything
-          children: [
-            SizedBox(width: 10), // Space between logo and text
-            Text(
-              "Create Account",
-              style: GoogleFonts.roboto(
-                textStyle: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: const Color.fromARGB(255, 10, 10, 10),
+      backgroundColor: const Color(0xFFF2F4F6),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: 200,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      top: -60,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        height: 300,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(
+                              "assets/images/registration1.jpg",
+                            ),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
-        ),
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Center(
-          child: Container(
-            height: 600,
-            width: 500,
-            color: const Color.fromARGB(41, 238, 246, 244),
-            child: Form(
-              key: formKey,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: Column(
-                    children: [
-                      TextFormField(
-                        controller: firstnameController,
-                        decoration: InputDecoration(
-                          labelText: 'First-Name',
-                          prefixIcon: Icon(Icons.person),
-                          prefixIconColor: const Color.fromARGB(255, 1, 1, 3),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your name';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
+              Text(
+                "Create Account",
+                style: GoogleFonts.roboto(
+                  fontSize: 26,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF003049),
+                ),
+                textAlign: TextAlign.center,
+              ),
 
-                      TextFormField(
-                        controller: lastnamecontroller,
-                        decoration: InputDecoration(
-                          labelText: 'Last-Name',
-                          prefixIcon: Icon(Icons.person_2_outlined),
-                          prefixIconColor: const Color.fromARGB(255, 4, 4, 13),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your name';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          prefixIcon: Icon(Icons.email),
-                          prefixIconColor: const Color.fromARGB(255, 2, 2, 7),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!value.contains('@')) {
-                            return 'Please enter a valid email';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: mobileController,
-                        decoration: InputDecoration(
-                          labelText: 'Mobile',
-                          prefixIcon: Icon(Icons.phone_android_outlined),
-                          prefixIconColor: const Color.fromARGB(255, 2, 2, 5),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your mobile number';
-                          }
-                          if (value.length != 10) {
-                            return 'Mobile number must be 10 digits';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          prefixIcon: Icon(Icons.lock_open_outlined),
-                          prefixIconColor: const Color.fromARGB(255, 2, 2, 4),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter a password';
-                          }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: confirmPasswordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: 'Re-enter Password',
-                          prefixIcon: Icon(Icons.lock_outline_sharp),
-                          prefixIconColor: const Color.fromARGB(255, 6, 6, 14),
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please re-enter your password';
-                          }
-                          if (value != passwordController.text) {
-                            return 'Passwords do not match';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed: () {
-                          _registerUser();
+              const SizedBox(height: 20),
 
-                          // playSound();
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (context) => Loginpage1(),
-                          //   ),
-                          // );
-                        },
-                        child: Text(
-                          'Register Now',
-                          style: GoogleFonts.roboto(
-                            color: const Color.fromARGB(255, 13, 13, 12),
-                          ),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 50,
-                            vertical: 15,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: 16),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Loginpage1(),
-                            ),
-                          );
-                        },
-                        child: RichText(
-                          text: TextSpan(
-                            text: "Already have an account?   ",
-                            style: GoogleFonts.roboto(color: Colors.black87),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: 'LOGIN HERE',
-                                style: GoogleFonts.roboto(
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color.fromARGB(255, 1, 1, 15),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+              // Registration Form Card
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 12,
+                        color: Colors.black12,
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
+                  child: Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        _buildTextField(
+                          controller: firstnameController,
+                          label: "First Name",
+                          icon: Icons.person,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextField(
+                          controller: lastnamecontroller,
+                          label: "Last Name",
+                          icon: Icons.person_outline,
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextField(
+                          controller: emailController,
+                          label: "Email",
+                          icon: Icons.email,
+                          validator: (value) {
+                            if (value == null || value.isEmpty)
+                              return 'Enter your email';
+                            if (!value.contains('@'))
+                              return 'Enter valid email';
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        _buildTextField(
+                          controller: mobileController,
+                          label: "Mobile Number",
+                          icon: Icons.phone,
+                          keyboardType: TextInputType.phone,
+                          validator: (value) {
+                            if (value == null || value.isEmpty)
+                              return 'Enter your mobile number';
+                            if (value.length != 10) return 'Must be 10 digits';
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        TextFormField(
+                          controller: passwordController,
+                          obscureText: _obscureText,
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            prefixIcon: const Icon(Icons.lock),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscureText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                              ),
+                              onPressed: _togglePassword,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty)
+                              return 'Enter your password';
+                            if (value.length < 6)
+                              return 'At least 6 characters';
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              _registerUser();
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 50,
+                              vertical: 5,
+                            ),
+                            backgroundColor: const Color(0xFF003049),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          child: Text(
+                            "Register Now",
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        Text(
+                          "OR",
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        OutlinedButton.icon(
+                          icon: const FaIcon(
+                            FontAwesomeIcons.google,
+                            color: Color(0xFFDB4437),
+                          ),
+                          onPressed: () {
+                            // Google sign-in logic
+                          },
+                          label: const Text(
+                            "Continue with Google",
+                            style: TextStyle(color: Color(0xFF003049)),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            side: const BorderSide(color: Color(0xFF003049)),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 5,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Loginpage1(),
+                              ),
+                            );
+                          },
+                          child: RichText(
+                            text: TextSpan(
+                              text: "Already have an account? ",
+                              style: GoogleFonts.poppins(color: Colors.black87),
+                              children: [
+                                TextSpan(
+                                  text: "Login Here",
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xFF003049),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
+
+              const SizedBox(height: 30),
+            ],
           ),
         ),
       ),
     );
   }
 
-  Future<void> playSound() async {
-    String audioPath = "sounds/menus.mp3";
-    await player.play(AssetSource(audioPath));
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    TextInputType keyboardType = TextInputType.text,
+    String? Function(String?)? validator,
+  }) {
+    return TextFormField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        prefixIcon: Icon(icon),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+      validator:
+          validator ??
+          (value) {
+            if (value == null || value.isEmpty) return 'Please enter $label';
+            return null;
+          },
+    );
   }
 
   Dio _dio = Dio();
@@ -352,5 +376,4 @@ class _RegistrationState extends State<Registration> {
       print("Exception: $e");
     }
   }
-  
 }
